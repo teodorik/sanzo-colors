@@ -2,23 +2,157 @@
 
 A portable `/colors` skill and offline terminal tool for recommending and applying Sanzo Wada color combinations. Built with Plugin Creator. No API keys, server, Python dependencies, or paid services required. Python 3.9+.
 
-## Install
+## Terminal installation (macOS / Linux)
+
+Requires **Python 3.9+**, Git, and access to this private repository. The commands below use GitHub CLI (`gh`) to authenticate and clone. Check your prerequisites:
 
 ```sh
-git clone https://github.com/teodorik/sanzo-colors.git
+python3 --version
+git --version
+gh --version
+```
+
+If a command is missing, install [Python](https://www.python.org/downloads/), [Git](https://git-scm.com/downloads), or [GitHub CLI](https://cli.github.com/) first. Windows users can run these instructions inside WSL; native Windows installation is not covered.
+
+### 1. Download and install
+
+Run in the directory where you want to keep the source checkout:
+
+```sh
+gh auth login
+gh repo clone teodorik/sanzo-colors
 cd sanzo-colors
 python3 scripts/install.py --global
 ```
 
-The repository is private; authenticate with GitHub first (or use `gh repo clone teodorik/sanzo-colors`). The installer copies the self-contained skill to `~/.agents/skills/colors` (Codex, Cursor and compatible agents) and `~/.claude/skills/colors` (Claude Code), and installs `~/.local/bin/colors`. It refuses existing destinations. If needed, add `export PATH="$HOME/.local/bin:$PATH"` to your shell configuration. Restart your assistant or start a new chat to refresh skill discovery.
+Use the GitHub account that has access to `teodorik/sanzo-colors`. If already authenticated, you can skip `gh auth login`. If you already cloned the repository, enter that checkout instead of cloning again.
 
-For a single project instead:
+The installer needs no `sudo`, `pip`, or API key. It installs:
+
+| Location | Purpose |
+|---|---|
+| `~/.local/bin/colors` | Terminal command |
+| `~/.agents/skills/colors/` | Self-contained skill and data for Codex, Cursor, and compatible agents |
+| `~/.claude/skills/colors/` | Self-contained skill and data for Claude Code |
+
+These are copies, so moving the source checkout will not break the installed command. The installer refuses to overwrite existing destinations; see Updates below for an existing installation.
+
+### 2. Make the command available
+
+For the current terminal session:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+To keep this setting in future terminals, add that same line once to `~/.zshrc` for zsh (the macOS default), or `~/.bashrc` for interactive bash. macOS bash login shells typically read `~/.bash_profile` instead. Open a new terminal after saving.
+
+### 3. Verify
+
+```sh
+command -v colors
+colors --help
+colors show 238
+colors contrast '#000000' '#ffffff'
+```
+
+`command -v` should point to your home directory's `.local/bin/colors`. The last command should return a ratio of `21.0`, with both text checks set to `true`.
+
+### 4. Use it
+
+```sh
+# Get three candidate palettes
+colors recommend --mood calm --size 3 --limit 3
+
+# Find combinations near an existing brand color
+colors recommend --hex '#417777' --size 3 --limit 5
+
+# Search named swatches and their combination memberships
+colors search 'green'
+
+# Inspect one original combination, including pairwise contrast
+colors show 238
+
+# Export the original swatches as CSS variables
+colors show 238 --format css > palette.css
+
+# Check your chosen text and background colors
+colors contrast '#340059' '#9cb29e'
+```
+
+Quote HEX values so the shell does not treat `#` as a comment. CSS redirection creates or replaces `palette.css` in your current directory.
+
+Available moods: `calm`, `warm`, `earthy`, `playful`, `bold`, `cool`, `editorial`, `soft`. Sizes: `2`, `3`, or `4`. Combination IDs: `1`–`348`. The CLI prints JSON by default; `show --format css` prints CSS. All palette operations work offline after installation.
+
+### Use from an AI terminal assistant
+
+Open Codex or Claude Code in your project, then enter the prompt **inside the assistant**, not at the shell prompt:
+
+```text
+Codex:       $colors recommend three palettes for a calm editorial website
+Claude Code: /colors recommend three palettes for a calm editorial website
+Cursor:      /colors recommend three palettes for a calm editorial website
+```
+
+Start a new assistant session after installation so it can discover the skill. In a normal shell, use `colors`, with no `/` or `$` prefix. The assistant curates recommendations and can apply them to project files when asked; the terminal command itself only looks up and exports data.
+
+### Updates
+
+First, update the source checkout:
+
+```sh
+cd /path/to/sanzo-colors
+git pull --ff-only
+```
+
+The installer deliberately does not overwrite files. To reinstall, move the previous installation into a unique backup directory, then run the installer again. These paths must belong to your Sanzo Colors installation; preserve any custom edits before proceeding.
+
+```sh
+backup_dir="$(mktemp -d "${TMPDIR:-/tmp}/sanzo-colors-backup.XXXXXX")"
+[ ! -e "$HOME/.agents/skills/colors" ] || mv "$HOME/.agents/skills/colors" "$backup_dir/agents-colors"
+[ ! -e "$HOME/.claude/skills/colors" ] || mv "$HOME/.claude/skills/colors" "$backup_dir/claude-colors"
+[ ! -e "$HOME/.local/bin/colors" ] || mv "$HOME/.local/bin/colors" "$backup_dir/colors"
+python3 scripts/install.py --global
+colors show 238
+```
+
+Restart your assistant afterward. Updating the GitHub checkout alone does not update installed copies or the separately saved account plugin.
+
+### Uninstall
+
+Remove only these Sanzo Colors files and directories:
+
+```sh
+rm -r "$HOME/.agents/skills/colors" "$HOME/.claude/skills/colors"
+rm "$HOME/.local/bin/colors"
+```
+
+Keep `~/.local/bin` on PATH if you use it for other commands. The source checkout and account plugin are separate from this local installation.
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `colors: command not found` | Set PATH as above, or run `~/.local/bin/colors --help` directly. |
+| `Repository not found` when cloning | The repository is private. Check `gh auth status` and sign in with an account that has access. |
+| `Refusing to overwrite …` | An installation already exists. Use it directly or follow Updates; the installer preserves existing files. |
+| `python3: command not found` | Install Python 3.9+ and open a new terminal. |
+| Another `colors` command runs | Check `command -v colors`; put `~/.local/bin` first on PATH or use the full path. |
+| Skill missing in an assistant | Start a new session and check the installed skill directory. Codex can use `$colors` or `/skills`; slash menus depend on the host. |
+
+## Project-only installation and other hosts
 
 ```sh
 python3 scripts/install.py --project /path/to/project
 ```
 
-This creates `.agents/skills/colors` and `.claude/skills/colors` in that project. It does not install a terminal command. For other Agent Skills hosts, copy `skills/colors` into their supported skills directory, preserving its supporting files. Hosts without skills can read `skills/colors/SKILL.md` directly.
+This creates `.agents/skills/colors` and `.claude/skills/colors` in that project. It does **not** install a terminal command. For other Agent Skills hosts, copy `skills/colors` into their supported skills directory, preserving supporting files. Hosts without skills can read `skills/colors/SKILL.md` directly.
+
+To try the CLI from a checkout without installing anything:
+
+```sh
+python3 bin/colors show 238
+```
 
 ## Invoke
 

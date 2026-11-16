@@ -208,13 +208,11 @@ Run without installing: `python3 bin/colors show 176`.
 
 The CLI returns data; the assistant skill interprets the brief, curates candidates, assigns semantic roles, and edits theme files when requested. The CLI does not autonomously rewrite a project. Mood ranking uses modern seed colors and nearest swatches in OKLab, not historical mood labels. Exact ties use combination IDs.
 
-## Sources and coverage
+## Source and coverage
 
-[W.S. Colors](https://wscolors.com/palettes) is also used by the assistant skill for live palette exploration and comparison. It lists 348 palettes, but its numbering differs from DMBK: always cite the source and verify the actual swatches before matching palettes. Its data is not included in the offline CLI; `colors show 238` still means **DMBK combination 238**. No W.S. Colors API or redistribution license has been verified.
+[DMBK's collection](https://sanzo-wada.dmbk.io/) is the sole palette source. Its bundled MIT-licensed snapshot contains 159 colors and 348 combinations. Its [upstream](https://github.com/dblodorn/sanzo-wada) is credited to Dain Blodorn; the original license is retained under the skill's data directory. See [provenance and limitations](../skills/colors/references/sources.md).
 
-[Wada Sanzo Colors](https://www.wada-sanzo-colors.com/) is a complementary live reference including additional classic and seasonal combinations. [DMBK's collection](https://sanzo-wada.dmbk.io/) supplies the bundled MIT-licensed snapshot: 159 colors and 348 combinations. Its [upstream](https://github.com/dblodorn/sanzo-wada) is credited to Dain Blodorn; the original license is retained under the skill's data directory. See [provenance and limitations](../skills/colors/references/sources.md).
-
-Digital values are source-specific. Added neutrals or adjusted colors must be labelled as adaptations. Contrast checks cover opaque sRGB pairs, not full-interface accessibility. Original CSS exports contain named swatches rather than assumed semantic roles.
+The CLI uses DMBK IDs and digital values. Added neutrals or adjusted colors must be labelled as adaptations. Contrast checks cover opaque sRGB pairs, not full-interface accessibility. Original CSS exports contain named swatches rather than assumed semantic roles.
 
 ## Development and packaging
 
@@ -227,4 +225,4 @@ The ZIP contains the portable plugin manifest, icon, and self-contained skill on
 
 Host formats: [Cursor Skills](https://cursor.com/docs/skills), [Claude Code Skills](https://code.claude.com/docs/en/skills), [Codex Skills](https://developers.openai.com/codex/skills/).
 
-License: MIT for original code and instructions; bundled data retains its upstream MIT notice. Not affiliated with any of the reference websites.
+License: MIT for original code and instructions; bundled data retains its upstream MIT notice. Not affiliated with the source website.

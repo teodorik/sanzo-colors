@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "sanzo-colors",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Recommend and apply source-backed Sanzo Wada color combinations with a portable colors skill and offline CLI.",
   "author": {
     "name": "teodorik"
@@ -13,7 +13,7 @@
       "interface": {
         "displayName": "Sanzo Colors",
         "shortDescription": "Sanzo Wada color combinations",
-        "longDescription": "Recommend palettes, inspect original swatches, export CSS, check contrast, and apply colors through a portable skill. Includes 348 offline combinations and links to three reference collections.",
+        "longDescription": "Recommend palettes, inspect original swatches, export CSS, check contrast, and apply colors through a portable skill. Includes 348 offline combinations from DMBK, the sole palette source.",
         "developerName": "teodorik",
         "category": "Productivity",
         "capabilities": [],

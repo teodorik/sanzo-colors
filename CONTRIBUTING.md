@@ -10,7 +10,7 @@ Keep the main experience simple: install with `npx skills add teodorik/sanzo-col
 - `plugin.json`, `assets/`: private account plugin compatibility; not required for Skills CLI installation.
 - `tests/`: dataset, contrast, packaging, and legacy installer regression checks.
 
-Do not invent palette IDs, quietly change original values, or merge source numbering. Keep attribution and upstream notices. The CLI's mood ranking is a heuristic; the assistant must curate for the brief.
+Do not invent palette IDs, quietly change original values, or introduce another palette source. Keep attribution and upstream notices. The CLI's mood ranking is a heuristic; the assistant must curate for the brief.
 
 ## Verify
 
@@ -21,7 +21,7 @@ npx skills add . --list
 
 In a disposable project, install from this checkout using `npx skills add /absolute/path/to/sanzo-colors --skill colors -a codex claude-code cursor -y`. Check that the helper, data, licenses, and references were installed with SKILL.md. Run the helper from its installed location.
 
-Useful behavior checks: recommend three calm editorial palettes; anchor to an existing HEX color; apply a specific combination; handle a low-contrast pair; distinguish W.S. Colors IDs from DMBK IDs; disclose unavailable calculations or browsing.
+Useful behavior checks: recommend three calm editorial palettes; anchor to an existing HEX color; apply a specific combination; handle a low-contrast pair; preserve DMBK combination IDs and values; disclose unavailable calculations or browsing.
 
 ## Plugin export
 

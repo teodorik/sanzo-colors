@@ -70,7 +70,7 @@ def main(argv=None):
                    'note': 'Opaque sRGB pair only; not a whole-interface accessibility audit.'}
         elif a.command == 'show':
             if a.id not in combos:
-                raise ValueError('Combination absent from bundled DMBK data (available: 1–348). Check the Wada Sanzo Colors reference for additional combinations.')
+                raise ValueError('Combination absent from bundled DMBK data (available: 1–348). Use a DMBK combination ID from 1 to 348.')
             out = palette(a.id, combos[a.id])
             if a.format == 'css':
                 print('/* DMBK / Sanzo Wada combination %s; original swatches, not semantic roles */' % a.id)

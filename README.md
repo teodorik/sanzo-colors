@@ -34,17 +34,15 @@ You can also use `/colors` in Claude Code or Cursor, and `$colors` in Codex. Sta
 | Show | Original color names, HEX values, and source-specific combination IDs |
 | Apply | Background, text, and accent roles mapped to your existing theme |
 | Check | Measured text contrast, with any adaptations clearly labelled |
-| Explore | 348 bundled combinations and three online references |
+| Explore | 348 bundled combinations from DMBK |
 
 The original combinations stay intact. Mood names, usage proportions, and website roles are design interpretations. Extra neutrals or adjusted colors are labelled as adaptations.
 
-## Sources
+## Source
 
-- [DMBK's Sanzo Wada collection](https://sanzo-wada.dmbk.io/) — the bundled, offline dataset.
-- [Wada Sanzo Colors](https://www.wada-sanzo-colors.com/) — additional classic and seasonal references.
-- [W.S. Colors](https://wscolors.com/palettes) — another palette exploration reference.
+[DMBK's Sanzo Wada collection](https://sanzo-wada.dmbk.io/) is the sole palette source, including the bundled offline dataset. Browse a combination such as [#96](https://sanzo-wada.dmbk.io/combination/96), or ask the skill to find one for your brief.
 
-Numbering and digital values can differ between sites. The skill verifies actual swatches before matching palettes. [Source details](skills/colors/references/sources.md).
+All palette IDs and digital color values follow DMBK. [Source details](skills/colors/references/sources.md).
 
 ## More
 
@@ -56,4 +54,4 @@ The skill can read its bundled data without Python. Its optional lookup, CSS exp
 
 ## License
 
-MIT. The bundled dataset retains [Dain Blodorn's MIT notice](skills/colors/data/LICENSE). Not affiliated with the reference websites.
+MIT. The bundled dataset retains [Dain Blodorn's MIT notice](skills/colors/data/LICENSE). Not affiliated with the source website.

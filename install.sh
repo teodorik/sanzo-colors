@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One-shot installer for Sanzo Colors. Requires Python 3.9+ and Git.
-# Private repository access uses an authenticated GitHub CLI (gh).
+# Public repository: no GitHub account or authentication required.
 set -euo pipefail
 
 sanzo_install() (
@@ -19,15 +19,10 @@ sanzo_install() (
   sanzo_tmp=$(mktemp -d "${TMPDIR:-/tmp}/sanzo-colors-install.XXXXXX")
   trap 'rm -rf -- "$sanzo_tmp"' EXIT
   echo 'Downloading teodorik/sanzo-colors…'
-  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-    gh repo clone teodorik/sanzo-colors "$sanzo_tmp/repo" -- --depth 1 --branch main --quiet
-  else
-    # This also works with existing Git credential helpers, or if the repo is public.
-    GIT_TERMINAL_PROMPT=0 git clone --depth 1 --branch main --quiet https://github.com/teodorik/sanzo-colors.git "$sanzo_tmp/repo" || {
-      echo 'The repository is private. Install GitHub CLI, run gh auth login, then retry.' >&2
-      exit 1
-    }
-  fi
+  GIT_TERMINAL_PROMPT=0 git -c credential.helper= clone --depth 1 --branch main --quiet https://github.com/teodorik/sanzo-colors.git "$sanzo_tmp/repo" || {
+    echo 'Download failed. Check your network and https://github.com/teodorik/sanzo-colors, then retry.' >&2
+    exit 1
+  }
   python3 "$sanzo_tmp/repo/scripts/install.py" "$@"
   echo 'Done. Start a new assistant session to discover the colors skill.'
   if [ "$1" = '--global' ]; then

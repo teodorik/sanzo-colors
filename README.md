@@ -4,27 +4,21 @@ A portable `/colors` skill and offline terminal tool for recommending and applyi
 
 ## One-line installation from GitHub
 
-Requires Python 3.9+, Git, and (for this private repository) authenticated [GitHub CLI](https://cli.github.com/). Run `gh auth login` once with an account that has repository access, then:
-
-```sh
-(set -o pipefail; gh api -H 'Accept: application/vnd.github.raw+json' 'repos/teodorik/sanzo-colors/contents/install.sh?ref=main' | bash)
-```
-
-This downloads the installer from GitHub, clones the source into a temporary directory, installs the terminal command and assistant skills, and removes the temporary checkout. It does not change shell configuration or overwrite an existing installation. If already installed, use the [update instructions](#updates).
-
-For a project-only skill installation:
-
-```sh
-(set -o pipefail; gh api -H 'Accept: application/vnd.github.raw+json' 'repos/teodorik/sanzo-colors/contents/install.sh?ref=main' | bash -s -- --project /path/to/project)
-```
-
-**Public-repository curl equivalent:** the following works only if the repository is made public in the future. It currently returns an access error because this repository is private.
+Requires **Python 3.9+**, Git, curl, and bash on macOS or Linux. No GitHub account or authentication is required.
 
 ```sh
 (set -o pipefail; curl -fsSL https://raw.githubusercontent.com/teodorik/sanzo-colors/main/install.sh | bash)
 ```
 
-The authenticated `gh api` command is the supported equivalent today; no token needs to be pasted into a command. `pipefail` makes a download failure fail the overall command too.
+This downloads the installer from GitHub, clones the source into a temporary directory, installs the terminal command and assistant skills, and removes the temporary checkout. It does not change shell configuration or overwrite an existing installation. If already installed, use the [update instructions](#updates). `pipefail` makes a download failure fail the overall command too.
+
+For a project-only skill installation:
+
+```sh
+(set -o pipefail; curl -fsSL https://raw.githubusercontent.com/teodorik/sanzo-colors/main/install.sh | bash -s -- --project /path/to/project)
+```
+
+You can [read the installer](install.sh) before running it, or use the manual installation below. The one-line command installs the latest `main` branch.
 
 After installing, if needed:
 
@@ -35,28 +29,26 @@ colors show 238
 
 ## Terminal installation (macOS / Linux)
 
-Requires **Python 3.9+**, Git, and access to this private repository. The commands below use GitHub CLI (`gh`) to authenticate and clone. Check your prerequisites:
+Requires **Python 3.9+** and Git. Check your prerequisites:
 
 ```sh
 python3 --version
 git --version
-gh --version
 ```
 
-If a command is missing, install [Python](https://www.python.org/downloads/), [Git](https://git-scm.com/downloads), or [GitHub CLI](https://cli.github.com/) first. Windows users can run these instructions inside WSL; native Windows installation is not covered.
+If a command is missing, install [Python](https://www.python.org/downloads/), [Git](https://git-scm.com/downloads) first. Windows users can run these instructions inside WSL; native Windows installation is not covered.
 
 ### 1. Download and install
 
 Run in the directory where you want to keep the source checkout:
 
 ```sh
-gh auth login
-gh repo clone teodorik/sanzo-colors
+git clone https://github.com/teodorik/sanzo-colors.git
 cd sanzo-colors
 python3 scripts/install.py --global
 ```
 
-Use the GitHub account that has access to `teodorik/sanzo-colors`. If already authenticated, you can skip `gh auth login`. If you already cloned the repository, enter that checkout instead of cloning again.
+If you already cloned the repository, enter that checkout instead of cloning again.
 
 The installer needs no `sudo`, `pip`, or API key. It installs:
 
@@ -129,7 +121,9 @@ Start a new assistant session after installation so it can discover the skill. I
 
 ### Updates
 
-First, update the source checkout:
+If you used the one-line installer, there is no permanent source checkout. After backing up the installed files as shown below, rerun the one-line command instead of `python3 scripts/install.py --global`.
+
+For a manual installation, first update the source checkout:
 
 ```sh
 cd /path/to/sanzo-colors
@@ -165,7 +159,7 @@ Keep `~/.local/bin` on PATH if you use it for other commands. The source checkou
 | Symptom | Fix |
 |---|---|
 | `colors: command not found` | Set PATH as above, or run `~/.local/bin/colors --help` directly. |
-| `Repository not found` when cloning | The repository is private. Check `gh auth status` and sign in with an account that has access. |
+| `Repository not found` when cloning | Check the repository URL and network connection. This public repository does not require authentication. |
 | `Refusing to overwrite …` | An installation already exists. Use it directly or follow Updates; the installer preserves existing files. |
 | `python3: command not found` | Install Python 3.9+ and open a new terminal. |
 | Another `colors` command runs | Check `command -v colors`; put `~/.local/bin` first on PATH or use the full path. |
@@ -226,4 +220,4 @@ The ZIP contains the portable plugin manifest, icon, and self-contained skill on
 
 Host formats: [Cursor Skills](https://cursor.com/docs/skills), [Claude Code Skills](https://code.claude.com/docs/en/skills), [Codex Skills](https://developers.openai.com/codex/skills/).
 
-License: MIT for original code and instructions; bundled data retains its upstream MIT notice. Not affiliated with either reference website.
+License: MIT for original code and instructions; bundled data retains its upstream MIT notice. Not affiliated with any of the reference websites.

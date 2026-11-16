@@ -5,10 +5,10 @@ Keep the main experience simple: install with `npx skills add teodorik/sanzo-col
 ## Layout
 
 - `skills/colors/`: the self-contained Agent Skill. All references and executable helpers needed by the skill belong here.
-- `docs/`: optional installation, migration, and terminal details.
-- `scripts/`, `bin/`, `install.sh`: optional terminal installation and plugin packaging.
+- `docs/install.md`: installation, update, removal, and migration guidance.
+- `scripts/package.py`: export the saved account plugin.
 - `plugin.json`, `assets/`: private account plugin compatibility; not required for Skills CLI installation.
-- `tests/`: dataset, contrast, packaging, and legacy installer regression checks.
+- `tests/`: dataset, contrast, CLI behavior, and packaging checks.
 
 Do not invent palette IDs, quietly change original values, or introduce another palette source. Keep attribution and upstream notices. The CLI's mood ranking is a heuristic; the assistant must curate for the brief.
 

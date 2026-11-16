@@ -44,18 +44,24 @@ npx skills remove colors
 
 For a global installation, add `-g`. Removal does not uninstall the optional terminal wrapper from the old curl installer.
 
-## Coming from the curl installer?
+## Coming from the old curl installer?
 
-Existing installations still work. You do not have to migrate. The [curl installer](terminal.md#updates) continues to install and update the optional terminal command and skills, with backups.
+The custom installer has been retired. Existing installed copies still run, but future installs and updates use the Skills CLI.
 
-To let the Skills CLI manage an old installation:
+1. Back up any custom edits in your existing `colors` skill folders. Global installs use `~/.agents/skills/colors` and `~/.claude/skills/colors`; project installs use the same paths inside the project without `~/`.
+2. Run `npx skills add teodorik/sanzo-colors` in your project, or add `-g` for global use. Select your assistants and review the replacement summary.
+3. Use `npx skills update` from then on. The old automatic backup directories are no longer managed; keep any you need.
 
-1. Back up the existing `colors` skill folders before replacing them, especially if you edited them. Global installs use `~/.agents/skills/colors` and `~/.claude/skills/colors`; project installs use the same paths inside the project without `~/`.
-2. Run `npx skills add teodorik/sanzo-colors` in the project, or add `-g` for the global scope. Select the same assistants and inspect the replacement summary before confirming.
-3. Use `npx skills update` for that installation from then on. Do not alternate installers on the same destination: their ownership, links, and update tracking differ.
+If you no longer need the old `~/.local/bin/colors` launcher, remove that file. It is not installed or removed by the Skills CLI. No shell configuration changes are required for the skill.
 
-Skills CLI updates are separate from the old installer's automatic backups. Preserve custom edits before using either installation manager. Global `npx` installation keeps the canonical `.agents/skills/colors` location, so an existing `~/.local/bin/colors` wrapper can still use its helper. If removing the skill, remove that wrapper too or it will point to missing files.
+## Run the helper directly
 
-## Need just the terminal command?
+The skill still includes offline lookup, CSS export, and contrast calculations. From a source checkout:
 
-See [optional terminal tools](terminal.md). They remain available without Node.js. The standard `npx` flow installs skills for assistants; it does not install `colors` on your shell PATH.
+```sh
+python3 skills/colors/scripts/colors.py show 96
+python3 skills/colors/scripts/colors.py recommend --mood calm --size 3
+python3 skills/colors/scripts/colors.py contrast '#340059' '#9cb29e'
+```
+
+Python 3.9+ is required for the helper. Assistants resolve this script relative to their installed skill directory, so no extra terminal launcher is needed.

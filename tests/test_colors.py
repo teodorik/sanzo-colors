@@ -12,7 +12,7 @@ c=importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 class ColorsTest(unittest.TestCase):
     def cli(self,*args):
-        return subprocess.run([sys.executable,str(ROOT/'bin/colors'),*args],text=True,capture_output=True)
+        return subprocess.run([sys.executable,str(ROOT/'skills/colors/scripts/colors.py'),*args],text=True,capture_output=True)
     def test_data_integrity(self):
         colors,combos=c.load()
         self.assertEqual(len(colors),159)
@@ -38,25 +38,6 @@ class ColorsTest(unittest.TestCase):
         r=self.cli('show','176','--format','css')
         self.assertEqual(r.returncode,0)
         self.assertIn('--wada-hermosa-pink: #ffb3f0;',r.stdout)
-    def test_install_update_preserves_custom_edits_in_backup(self):
-        with tempfile.TemporaryDirectory() as d:
-            cmd=[sys.executable,str(ROOT/'scripts/install.py'),'--project',d]
-            subprocess.run(cmd,check=True,capture_output=True)
-            skill=Path(d)/'.agents/skills/colors'
-            (skill/'SKILL.md').write_text('user changes')
-            (skill/'custom.txt').write_text('local addition')
-            subprocess.run(cmd,check=True,capture_output=True)
-            self.assertEqual((skill/'SKILL.md').read_text(),(ROOT/'skills/colors/SKILL.md').read_text())
-            backups=list(skill.parent.glob('.sanzo-colors-*/previous'))
-            self.assertEqual(len(backups),1)
-            self.assertEqual((backups[0]/'SKILL.md').read_text(),'user changes')
-            self.assertEqual((backups[0]/'custom.txt').read_text(),'local addition')
-            self.assertFalse((skill/'custom.txt').exists())
-            for host in ('.agents','.claude'):
-                script=Path(d)/host/'skills/colors/scripts/colors.py'
-                r=subprocess.run([sys.executable,str(script),'show','176'],capture_output=True,text=True,check=True)
-                self.assertEqual(json.loads(r.stdout)['id'],176)
-
     def test_archive(self):
         with tempfile.TemporaryDirectory() as d:
             archive=Path(d)/'plugin.zip'

@@ -47,7 +47,6 @@ All palette IDs and digital color values follow DMBK. [Source details](skills/co
 ## More
 
 - [Install for all projects, update, remove, or migrate an old installation](docs/install.md).
-- [Optional terminal CLI and curl installer](docs/terminal.md). `npx skills add` installs the agent skill; it does not add a shell command named `colors`.
 - [Contributing and verification](CONTRIBUTING.md).
 
 The skill can read its bundled data without Python. Its optional lookup, CSS export, and contrast helper uses Python 3.9+ with no dependencies. Without a calculation tool, contrast is reported as unverified.

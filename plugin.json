@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "sanzo-colors",
-  "version": "0.2.1",
-  "description": "Recommend and apply source-backed Sanzo Wada color combinations with a portable colors skill and offline CLI.",
+  "version": "0.3.0",
+  "description": "Recommend and apply source-backed Sanzo Wada color combinations with a portable colors skill and offline helper.",
   "author": {
     "name": "teodorik"
   },

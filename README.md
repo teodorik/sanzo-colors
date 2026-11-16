@@ -178,6 +178,8 @@ The CLI returns data; the assistant skill interprets the brief, curates candidat
 
 ## Sources and coverage
 
+[W.S. Colors](https://wscolors.com/palettes) is also used by the assistant skill for live palette exploration and comparison. It lists 348 palettes, but its numbering differs from DMBK: always cite the source and verify the actual swatches before matching palettes. Its data is not included in the offline CLI; `colors show 238` still means **DMBK combination 238**. No W.S. Colors API or redistribution license has been verified.
+
 [Wada Sanzo Colors](https://www.wada-sanzo-colors.com/) is a complementary live reference including additional classic and seasonal combinations. [DMBK's collection](https://sanzo-wada.dmbk.io/) supplies the bundled MIT-licensed snapshot: 159 colors and 348 combinations. Its [upstream](https://github.com/dblodorn/sanzo-wada) is credited to Dain Blodorn; the original license is retained under the skill's data directory. See [provenance and limitations](skills/colors/references/sources.md).
 
 Digital values are source-specific. Added neutrals or adjusted colors must be labelled as adaptations. Contrast checks cover opaque sRGB pairs, not full-interface accessibility. Original CSS exports contain named swatches rather than assumed semantic roles.

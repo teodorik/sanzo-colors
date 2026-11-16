@@ -38,18 +38,25 @@ class ColorsTest(unittest.TestCase):
         r=self.cli('show','176','--format','css')
         self.assertEqual(r.returncode,0)
         self.assertIn('--wada-hermosa-pink: #ffb3f0;',r.stdout)
-    def test_install_is_portable_and_refuses_overwrite(self):
+    def test_install_update_preserves_custom_edits_in_backup(self):
         with tempfile.TemporaryDirectory() as d:
             cmd=[sys.executable,str(ROOT/'scripts/install.py'),'--project',d]
             subprocess.run(cmd,check=True,capture_output=True)
+            skill=Path(d)/'.agents/skills/colors'
+            (skill/'SKILL.md').write_text('user changes')
+            (skill/'custom.txt').write_text('local addition')
+            subprocess.run(cmd,check=True,capture_output=True)
+            self.assertEqual((skill/'SKILL.md').read_text(),(ROOT/'skills/colors/SKILL.md').read_text())
+            backups=list(skill.parent.glob('.sanzo-colors-*/previous'))
+            self.assertEqual(len(backups),1)
+            self.assertEqual((backups[0]/'SKILL.md').read_text(),'user changes')
+            self.assertEqual((backups[0]/'custom.txt').read_text(),'local addition')
+            self.assertFalse((skill/'custom.txt').exists())
             for host in ('.agents','.claude'):
-                skill=Path(d)/host/'skills/colors'
-                r=subprocess.run([sys.executable,str(skill/'scripts/colors.py'),'show','176'],capture_output=True,text=True,check=True)
+                script=Path(d)/host/'skills/colors/scripts/colors.py'
+                r=subprocess.run([sys.executable,str(script),'show','176'],capture_output=True,text=True,check=True)
                 self.assertEqual(json.loads(r.stdout)['id'],176)
-            marker=Path(d)/'.agents/skills/colors/SKILL.md'
-            marker.write_text('user changes')
-            self.assertNotEqual(subprocess.run(cmd,capture_output=True).returncode,0)
-            self.assertEqual(marker.read_text(),'user changes')
+
     def test_archive(self):
         with tempfile.TemporaryDirectory() as d:
             archive=Path(d)/'plugin.zip'

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-shot installer for Sanzo Colors. Requires Python 3.9+ and Git.
+# Install or update Sanzo Colors with backups. Requires Python 3.9+ and Git.
 # Public repository: no GitHub account or authentication required.
 set -euo pipefail
 

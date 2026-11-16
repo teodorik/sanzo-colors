@@ -10,7 +10,7 @@ Requires **Python 3.9+**, Git, curl, and bash on macOS or Linux. No GitHub accou
 (set -o pipefail; curl -fsSL https://raw.githubusercontent.com/teodorik/sanzo-colors/main/install.sh | bash)
 ```
 
-This downloads the installer from GitHub, clones the source into a temporary directory, installs the terminal command and assistant skills, and removes the temporary checkout. It does not change shell configuration or overwrite an existing installation. If already installed, use the [update instructions](#updates). `pipefail` makes a download failure fail the overall command too.
+This downloads the installer from GitHub, clones the source into a temporary directory, installs the terminal command and assistant skills, and removes the temporary checkout. It installs or updates an existing Sanzo Colors installation and preserves previous files in backups. It does not change shell configuration. See [update behavior](#updates). `pipefail` makes a download failure fail the overall command too.
 
 For a project-only skill installation:
 
@@ -58,7 +58,7 @@ The installer needs no `sudo`, `pip`, or API key. It installs:
 | `~/.agents/skills/colors/` | Self-contained skill and data for Codex, Cursor, and compatible agents |
 | `~/.claude/skills/colors/` | Self-contained skill and data for Claude Code |
 
-These are copies, so moving the source checkout will not break the installed command. The installer refuses to overwrite existing destinations; see Updates below for an existing installation.
+These are copies, so moving the source checkout will not break the installed command. The installer updates recognized Sanzo Colors installations, including older versions, with backups; unrelated files and symlinks are not replaced.
 
 ### 2. Make the command available
 
@@ -121,27 +121,34 @@ Start a new assistant session after installation so it can discover the skill. I
 
 ### Updates
 
-If you used the one-line installer, there is no permanent source checkout. After backing up the installed files as shown below, rerun the one-line command instead of `python3 scripts/install.py --global`.
+**Run the same one-line command again:**
 
-For a manual installation, first update the source checkout:
+```sh
+(set -o pipefail; curl -fsSL https://raw.githubusercontent.com/teodorik/sanzo-colors/main/install.sh | bash)
+```
+
+It downloads the latest `main` and updates the terminal command and installed skills. No manual deletion, permanent checkout, or extra update flag is needed. Project installations use the same command with `bash -s -- --project /path/to/project`.
+
+For a manual checkout:
 
 ```sh
 cd /path/to/sanzo-colors
 git pull --ff-only
-```
-
-The installer deliberately does not overwrite files. To reinstall, move the previous installation into a unique backup directory, then run the installer again. These paths must belong to your Sanzo Colors installation; preserve any custom edits before proceeding.
-
-```sh
-backup_dir="$(mktemp -d "${TMPDIR:-/tmp}/sanzo-colors-backup.XXXXXX")"
-[ ! -e "$HOME/.agents/skills/colors" ] || mv "$HOME/.agents/skills/colors" "$backup_dir/agents-colors"
-[ ! -e "$HOME/.claude/skills/colors" ] || mv "$HOME/.claude/skills/colors" "$backup_dir/claude-colors"
-[ ! -e "$HOME/.local/bin/colors" ] || mv "$HOME/.local/bin/colors" "$backup_dir/colors"
 python3 scripts/install.py --global
-colors show 238
 ```
 
-Restart your assistant afterward. Updating the GitHub checkout alone does not update installed copies or the separately saved account plugin.
+Update behavior:
+
+- Recognized Sanzo Colors installations are replaced with the downloaded version. Older v0.1.x installations are recognized from their supporting files; new installs include an ownership marker.
+- Previous files, including your custom edits and additions, are preserved in a hidden sibling directory named `.sanzo-colors-<unique-id>/previous`. The installer prints each exact backup path. Backups persist until you remove them.
+- Custom edits are **backed up, not merged** into the new version. Reapply any wanted customizations after updating.
+- New files are staged before replacement. A handled installation failure rolls back replaced targets. An interruption such as a power failure may require manual recovery from the printed paths or hidden sibling backup directories.
+- Unrecognized installations and symlinks at the destination are refused. Move them aside explicitly if you want Sanzo Colors to use those paths.
+- A lock prevents simultaneous installers for the same home or project. If an interrupted process leaves `.sanzo-colors-install.lock` there, remove that empty lock directory only after confirming no installer is running.
+
+To restore a backup, move the current target aside, then move the printed `previous` file or directory back to its original target. Backups live alongside `colors` under `.agents/skills`, `.claude/skills`, and (for the terminal wrapper) `.local/bin`.
+
+Restart your assistant after updating. This updates local files only; the separately saved account plugin has its own release process. Repeating the command creates another backup even when the downloaded version has not changed.
 
 ### Uninstall
 
@@ -160,7 +167,7 @@ Keep `~/.local/bin` on PATH if you use it for other commands. The source checkou
 |---|---|
 | `colors: command not found` | Set PATH as above, or run `~/.local/bin/colors --help` directly. |
 | `Repository not found` when cloning | Check the repository URL and network connection. This public repository does not require authentication. |
-| `Refusing to overwrite …` | An installation already exists. Use it directly or follow Updates; the installer preserves existing files. |
+| `Refusing to replace unrecognized installation or symlink …` | The destination cannot be identified as Sanzo Colors. Preserve it by moving it aside, then retry. |
 | `python3: command not found` | Install Python 3.9+ and open a new terminal. |
 | Another `colors` command runs | Check `command -v colors`; put `~/.local/bin` first on PATH or use the full path. |
 | Skill missing in an assistant | Start a new session and check the installed skill directory. Codex can use `$colors` or `/skills`; slash menus depend on the host. |
@@ -216,7 +223,7 @@ python3 -m unittest discover -s tests -v
 python3 scripts/package.py /absolute/path/sanzo-colors.zip
 ```
 
-The ZIP contains the portable plugin manifest, icon, and self-contained skill only. The GitHub repository also includes the CLI, installers, and tests. To update installations, explicitly remove only this skill's previous installation and rerun the installer; it never overwrites another skill. To uninstall, remove the installed `colors` skill directories and `~/.local/bin/colors`.
+The ZIP contains the portable plugin manifest, icon, and self-contained skill only. The GitHub repository also includes the CLI, installers, and tests. To update installations, rerun the installer; previous files are backed up and unrelated destinations are refused. To uninstall, remove the installed `colors` skill directories and `~/.local/bin/colors`.
 
 Host formats: [Cursor Skills](https://cursor.com/docs/skills), [Claude Code Skills](https://code.claude.com/docs/en/skills), [Codex Skills](https://developers.openai.com/codex/skills/).
 

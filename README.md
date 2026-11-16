@@ -2,6 +2,37 @@
 
 A portable `/colors` skill and offline terminal tool for recommending and applying Sanzo Wada color combinations. Built with Plugin Creator. No API keys, server, Python dependencies, or paid services required. Python 3.9+.
 
+## One-line installation from GitHub
+
+Requires Python 3.9+, Git, and (for this private repository) authenticated [GitHub CLI](https://cli.github.com/). Run `gh auth login` once with an account that has repository access, then:
+
+```sh
+(set -o pipefail; gh api -H 'Accept: application/vnd.github.raw+json' 'repos/teodorik/sanzo-colors/contents/install.sh?ref=main' | bash)
+```
+
+This downloads the installer from GitHub, clones the source into a temporary directory, installs the terminal command and assistant skills, and removes the temporary checkout. It does not change shell configuration or overwrite an existing installation. If already installed, use the [update instructions](#updates).
+
+For a project-only skill installation:
+
+```sh
+(set -o pipefail; gh api -H 'Accept: application/vnd.github.raw+json' 'repos/teodorik/sanzo-colors/contents/install.sh?ref=main' | bash -s -- --project /path/to/project)
+```
+
+**Public-repository curl equivalent:** the following works only if the repository is made public in the future. It currently returns an access error because this repository is private.
+
+```sh
+(set -o pipefail; curl -fsSL https://raw.githubusercontent.com/teodorik/sanzo-colors/main/install.sh | bash)
+```
+
+The authenticated `gh api` command is the supported equivalent today; no token needs to be pasted into a command. `pipefail` makes a download failure fail the overall command too.
+
+After installing, if needed:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+colors show 238
+```
+
 ## Terminal installation (macOS / Linux)
 
 Requires **Python 3.9+**, Git, and access to this private repository. The commands below use GitHub CLI (`gh`) to authenticate and clone. Check your prerequisites:

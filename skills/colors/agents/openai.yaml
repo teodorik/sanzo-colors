@@ -1,0 +1,6 @@
+interface:
+  display_name: "Colors"
+  short_description: "Sanzo Wada color combinations"
+  default_prompt: "Use $colors to recommend and apply a Sanzo Wada palette for this project."
+policy:
+  allow_implicit_invocation: true

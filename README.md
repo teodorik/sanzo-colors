@@ -1,22 +1,22 @@
 # Sanzo Colors
 
-An agent skill for choosing and applying Sanzo Wada color combinations to websites, interfaces, and visual work. It turns a brief into three considered palettes, shows how to use them, and checks text contrast.
+Use Sanzo Wada color combinations in your website, app, or visual work. The `colors` skill recommends palettes from DMBK, checks text contrast, and can apply your choice to an existing theme.
 
 ```sh
 npx skills add teodorik/sanzo-colors
 ```
 
-Choose your coding assistant in the installer. Works with Codex, Claude Code, Cursor, and other [supported agents](https://github.com/vercel-labs/skills#supported-agents). Requires Node.js 22.20+; no account or API key is needed.
+Choose your assistant if prompted. Supports Codex, Claude Code, Cursor, and other [agents](https://github.com/vercel-labs/skills#supported-agents). Requires Node.js 22.20+.
 
-To update installed skills:
+To update:
 
 ```sh
 npx skills update
 ```
 
-## Usage
+## Use it
 
-Ask your assistant naturally:
+Start a new assistant session, then ask:
 
 > Use the colors skill to show me three Sanzo Wada combinations for a calm editorial website.
 
@@ -24,33 +24,18 @@ Ask your assistant naturally:
 
 > Apply combination 238 to this page. Keep the original colors and check readability.
 
-You can also use `/colors` in Claude Code or Cursor, and `$colors` in Codex. Start a new session after installing.
+Or invoke `/colors` in Claude Code or Cursor, and `$colors` in Codex.
 
-## What it does
+Each recommendation includes the DMBK combination number, original color names and HEX values, suggested background/text/accent roles, and measured contrast when a calculation tool is available. The skill labels any added neutrals or adjusted colors.
 
-| Capability | Result |
-|---|---|
-| Recommend | Three distinct palettes suited to your brief |
-| Show | Original color names, HEX values, and source-specific combination IDs |
-| Apply | Background, text, and accent roles mapped to your existing theme |
-| Check | Measured text contrast, with any adaptations clearly labelled |
-| Explore | 348 bundled combinations from DMBK |
+## Data and tools
 
-The original combinations stay intact. Mood names, usage proportions, and website roles are design interpretations. Extra neutrals or adjusted colors are labelled as adaptations.
+[DMBK](https://sanzo-wada.dmbk.io/) is the only palette source. The skill includes 348 combinations for offline use, including [#96](https://sanzo-wada.dmbk.io/combination/96). Names such as “calm editorial” and suggested website roles are design choices, not historical labels.
 
-## Source
+The assistant can read the data directly. The optional Python 3.9+ helper looks up palettes, exports CSS, and calculates contrast without extra dependencies. If it cannot calculate contrast, it says so.
 
-[DMBK's Sanzo Wada collection](https://sanzo-wada.dmbk.io/) is the sole palette source, including the bundled offline dataset. Browse a combination such as [#96](https://sanzo-wada.dmbk.io/combination/96), or ask the skill to find one for your brief.
-
-All palette IDs and digital color values follow DMBK. [Source details](skills/colors/references/sources.md).
-
-## More
-
-- [Install for all projects, update, remove, or migrate an old installation](docs/install.md).
-- [Contributing and verification](CONTRIBUTING.md).
-
-The skill can read its bundled data without Python. Its optional lookup, CSS export, and contrast helper uses Python 3.9+ with no dependencies. Without a calculation tool, contrast is reported as unverified.
+[Installation and migration](docs/install.md) · [Source details](skills/colors/references/sources.md) · [Contributing](CONTRIBUTING.md)
 
 ## License
 
-MIT. The bundled dataset retains [Dain Blodorn's MIT notice](skills/colors/data/LICENSE). Not affiliated with the source website.
+MIT. The dataset includes [Dain Blodorn's MIT notice](skills/colors/data/LICENSE). This project is not affiliated with DMBK.
